@@ -1,11 +1,28 @@
-@PostCtrl = ($scope, $routeParams, postData) ->
+@PostCtrl = ($scope, $routeParams, $location, $q, postData) ->
   $scope.data =
-    post: postData.data[0]
+    post: postData.data
+    currentPost:
+      title: 'Loading...'
+      contents: ''
+
+  $scope.data.postId = $routeParams.postId
+
+  $scope.navNewPost = ->
+    $location.url('/post/new')
+
+  $scope.navHome = ->
+    $location.url('/')
+
+  $scope.prepPostData = ->
+    post = _.findWhere(postData.data.posts, { id: parseInt($scope.data.postId) })
+    $scope.data.currentPost.title = post.title
+    $scope.data.currentPost.contents = post.contents
+
+  @deferred = $q.defer()
+  @deferred.promise.then($scope.prepPostData)
 
   postData.loadPosts()
 
-  $scope.data.postId = $routeParams.postId
-  #console.log($routeParams)
-@PostCtrl.$inject = ['$scope', '$routeParams', 'postData']
+@PostCtrl.$inject = ['$scope', '$routeParams', '$location', '$q', 'postData']
 
 

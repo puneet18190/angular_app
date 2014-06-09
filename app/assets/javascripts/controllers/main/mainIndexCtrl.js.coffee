@@ -9,7 +9,7 @@
 #      console.error('Failed to load posts.')
 #    )
 
-  postData.loadPosts()
+  postData.loadPosts(null)
 
   $scope.viewPost = (postId) ->
     $location.url('/post/' +postId)
